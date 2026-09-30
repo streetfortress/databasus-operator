@@ -112,19 +112,23 @@ Make the compatibility matrix verified instead of asserted:
 
 ## 3. Release engineering
 
-- [x] Release workflow (August 2026, `.github/workflows/release.yml`, modeled
-      on PrimeTime's): semver tag → multi-arch image to
-      `ghcr.io/streetfortress/databasus-operator`, Helm chart to
-      `oci://ghcr.io/streetfortress/charts`, `install.yaml` attached to the
-      GitHub release. Runs on GitHub only — the ref-pusher of
-      sfi/deployments (#612) pushes main and the v* tags there, and that push
-      carries a GitHub App installation token rather than a workflow's
-      GITHUB_TOKEN, so it triggers the workflow; the installation token needs
-      `workflows: write`, and first-push GHCR packages must be flipped to
-      public in the web UI. `just tag X.Y.Z` guards the tagging (semver
-      check, HEAD must be origin/main); pushing the tag is the whole
-      release — there is no by-hand pipeline, since nothing here is
-      CI-hostile the way PrimeTime's Mac-bound app release is.
+- [x] Release workflow (August 2026, `.github/workflows/release.yml`;
+      reshaped September 2026 after oss/s3-exporter's, #14): semver tag →
+      multi-arch image to `ghcr.io/<owner>/databasus-operator`, Helm chart to
+      `oci://ghcr.io/<owner>/charts`, `install.yaml` attached to the GitHub
+      release, whose body is the commit subjects since the previous tag. The
+      owner comes from `github.repository_owner`, so another transfer of the
+      repository needs no edit here; the three jobs chain with `needs`, and
+      `contents: write` sits on the release job alone. Runs on GitHub only —
+      the ref-pusher of sfi/deployments (#612) pushes main and the v* tags
+      there, and that push carries a GitHub App installation token rather
+      than a workflow's GITHUB_TOKEN, so it triggers the workflow; the
+      installation token needs `workflows: write`, and first-push GHCR
+      packages must be flipped to public in the web UI. `just tag X.Y.Z`
+      guards the tagging (semver check, HEAD must be origin/main); pushing
+      the tag is the whole release — there is no by-hand pipeline, since
+      nothing here is CI-hostile the way PrimeTime's Mac-bound app release
+      is.
 - [x] Helm chart (`charts/databasus-operator/`): lockstep chart version =
       appVersion = release tag, stamped at package time; CRDs render as
       templates (synced from `config/crd` via `make chart-crds`, enforced in

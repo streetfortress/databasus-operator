@@ -12,7 +12,7 @@ type: application
 version: 0.1.0
 appVersion: "0.1.0"
 sources:
-  - https://github.com/sf1tzp/databasus-operator
+  - https://github.com/streetfortress/databasus-operator
 keywords:
   - databasus
   - backup

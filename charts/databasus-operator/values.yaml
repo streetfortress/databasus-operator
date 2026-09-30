@@ -1,5 +1,5 @@
 image:
-  repository: ghcr.io/sf1tzp/databasus-operator
+  repository: ghcr.io/streetfortress/databasus-operator
   # Defaults to "v<appVersion>" (the release tag). Override for pre-release
   # or locally built images.
   tag: ""

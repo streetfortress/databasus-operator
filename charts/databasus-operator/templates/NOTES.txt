@@ -17,7 +17,7 @@ If it does not exist yet:
 Next, declare resources — see config/samples/ in the repo for a full
 Storage + DatabaseBackup pair:
 
-    https://github.com/sf1tzp/databasus-operator/tree/main/config/samples
+    https://github.com/streetfortress/databasus-operator/tree/main/config/samples
 
 Check reconciliation state with:
 

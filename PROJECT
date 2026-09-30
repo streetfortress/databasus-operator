@@ -7,7 +7,7 @@ domain: databasus.io
 layout:
 - go.kubebuilder.io/v4
 projectName: databasus-operator
-repo: github.com/sf1tzp/databasus-operator
+repo: github.com/streetfortress/databasus-operator
 resources:
 - api:
     crdVersion: v1
@@ -16,7 +16,7 @@ resources:
   domain: databasus.io
   group: databasus
   kind: Storage
-  path: github.com/sf1tzp/databasus-operator/api/v1alpha1
+  path: github.com/streetfortress/databasus-operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -25,7 +25,7 @@ resources:
   domain: databasus.io
   group: databasus
   kind: Notifier
-  path: github.com/sf1tzp/databasus-operator/api/v1alpha1
+  path: github.com/streetfortress/databasus-operator/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -34,6 +34,6 @@ resources:
   domain: databasus.io
   group: databasus
   kind: DatabaseBackup
-  path: github.com/sf1tzp/databasus-operator/api/v1alpha1
+  path: github.com/streetfortress/databasus-operator/api/v1alpha1
   version: v1alpha1
 version: "3"

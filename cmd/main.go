@@ -23,9 +23,9 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	databasusv1alpha1 "github.com/sf1tzp/databasus-operator/api/v1alpha1"
-	dbclient "github.com/sf1tzp/databasus-operator/internal/client"
-	"github.com/sf1tzp/databasus-operator/internal/controller"
+	databasusv1alpha1 "github.com/streetfortress/databasus-operator/api/v1alpha1"
+	dbclient "github.com/streetfortress/databasus-operator/internal/client"
+	"github.com/streetfortress/databasus-operator/internal/controller"
 )
 
 var (

@@ -15,8 +15,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	databasusv1alpha1 "github.com/sf1tzp/databasus-operator/api/v1alpha1"
-	dbclient "github.com/sf1tzp/databasus-operator/internal/client"
+	databasusv1alpha1 "github.com/streetfortress/databasus-operator/api/v1alpha1"
+	dbclient "github.com/streetfortress/databasus-operator/internal/client"
 )
 
 const storageFinalizer = "databasus.io/storage-cleanup"

@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	dbclient "github.com/sf1tzp/databasus-operator/internal/client"
+	dbclient "github.com/streetfortress/databasus-operator/internal/client"
 )
 
 const (

@@ -1,6 +1,6 @@
 # databasus-operator
 
-[![CI](https://github.com/sf1tzp/databasus-operator/actions/workflows/ci.yml/badge.svg)](https://github.com/sf1tzp/databasus-operator/actions/workflows/ci.yml)
+[![CI](https://github.com/streetfortress/databasus-operator/actions/workflows/ci.yml/badge.svg)](https://github.com/streetfortress/databasus-operator/actions/workflows/ci.yml)
 
 A Kubernetes operator that manages [databasus](https://github.com/databasus/databasus) configuration declaratively via Custom Resource Definitions (CRDs). Instead of configuring databases, backups, storages, and notifiers through the web UI, define them as Kubernetes resources and let the operator reconcile them against the databasus API.
 
@@ -87,19 +87,21 @@ kubectl create secret generic gitea-db-credentials \
 
 ### 3. Install the operator
 
-Every release tag publishes a multi-arch image (`ghcr.io/sf1tzp/databasus-operator`) and a Helm chart to GHCR. Chart version, appVersion, and image tag move in lockstep with the release.
+Every release tag publishes a multi-arch image (`ghcr.io/streetfortress/databasus-operator`) and a Helm chart to GHCR. Chart version, appVersion, and image tag move in lockstep with the release.
+
+> `v0.1.0` predates the move to the `streetfortress` org and is published under the old names — `ghcr.io/sf1tzp/databasus-operator` and `oci://ghcr.io/sf1tzp/charts`. Every release after it uses the names below.
 
 ```bash
-helm install databasus-operator oci://ghcr.io/sf1tzp/charts/databasus-operator \
+helm install databasus-operator oci://ghcr.io/streetfortress/charts/databasus-operator \
   --namespace databasus --create-namespace
 ```
 
 See the [chart README](charts/databasus-operator/README.md) for values — databasus API URL, credentials Secret, and CRD handling (CRDs upgrade with the chart by default; uninstalling the chart then removes them and every operator CR).
 
-Alternatively, apply the standalone manifest attached to each [GitHub release](https://github.com/sf1tzp/databasus-operator/releases):
+Alternatively, apply the standalone manifest attached to each [GitHub release](https://github.com/streetfortress/databasus-operator/releases):
 
 ```bash
-kubectl apply -f https://github.com/sf1tzp/databasus-operator/releases/download/vX.Y.Z/install.yaml
+kubectl apply -f https://github.com/streetfortress/databasus-operator/releases/download/vX.Y.Z/install.yaml
 ```
 
 Or build and deploy from source:
@@ -263,7 +265,7 @@ make uninstall
 
 ## Development
 
-Primary development happens on a private Gitea instance; the GitHub repository is a push mirror of it. Issues and pull requests are welcome on GitHub — PRs are imported and merged internally, then mirrored back.
+Primary development happens on a private Gitea instance, which publishes `main` and the release tags to this GitHub repository. Issues and pull requests are welcome on GitHub — PRs are fetched and merged internally, and the merge commit then appears here.
 
 ```bash
 make lint   # golangci-lint
@@ -271,7 +273,7 @@ make test   # unit tests via envtest
 make build  # manager binary
 ```
 
-Releasing is a single guarded step — pushing the tag is the release (the mirrored tag triggers the publish workflow):
+Releasing is a single guarded step — pushing the tag is the release (the tag reaches GitHub and triggers the publish workflow there):
 
 ```bash
 just tag 0.1.0   # tag HEAD (must be at origin/main) and push

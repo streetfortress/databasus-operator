@@ -1,4 +1,4 @@
-module github.com/sf1tzp/databasus-operator
+module github.com/streetfortress/databasus-operator
 
 go 1.24.6
 

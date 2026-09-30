@@ -114,11 +114,13 @@ Make the compatibility matrix verified instead of asserted:
 
 - [x] Release workflow (August 2026, `.github/workflows/release.yml`, modeled
       on PrimeTime's): semver tag → multi-arch image to
-      `ghcr.io/sf1tzp/databasus-operator`, Helm chart to
-      `oci://ghcr.io/sf1tzp/charts`, `install.yaml` attached to the GitHub
-      release. Runs on the GitHub mirror only — a mirrored tag push is a
-      normal PAT push and triggers it there; the mirror PAT needs the
-      `workflow` scope, and first-push GHCR packages must be flipped to
+      `ghcr.io/streetfortress/databasus-operator`, Helm chart to
+      `oci://ghcr.io/streetfortress/charts`, `install.yaml` attached to the
+      GitHub release. Runs on GitHub only — the ref-pusher of
+      sfi/deployments (#612) pushes main and the v* tags there, and that push
+      carries a GitHub App installation token rather than a workflow's
+      GITHUB_TOKEN, so it triggers the workflow; the installation token needs
+      `workflows: write`, and first-push GHCR packages must be flipped to
       public in the web UI. `just tag X.Y.Z` guards the tagging (semver
       check, HEAD must be origin/main); pushing the tag is the whole
       release — there is no by-hand pipeline, since nothing here is
@@ -127,7 +129,16 @@ Make the compatibility matrix verified instead of asserted:
       appVersion = release tag, stamped at package time; CRDs render as
       templates (synced from `config/crd` via `make chart-crds`, enforced in
       CI) so `helm upgrade` keeps them current.
-- [ ] Cut v0.1.0 once the migration PR merges; pin the fleet to it
+- [x] Cut v0.1.0 (September 2026) and pin the fleet to it
+      (`fleet/apps/luxor/databasus-central/` in sfi/deployments)
+- [x] Re-home to streetfortress (September 2026, #14, sfi/deployments#612):
+      module path `github.com/streetfortress/databasus-operator`, image
+      `ghcr.io/streetfortress/databasus-operator`, chart
+      `oci://ghcr.io/streetfortress/charts`. v0.1.0 and its two packages stay
+      under the old `sf1tzp` names — nothing republishes them, and the fleet
+      moves to the new names in sfi/deployments#518 after the first release
+      here. The first tag after the re-home needs the two new GHCR packages
+      flipped to public.
 - [ ] Versioned compatibility rows in the README (operator vX.Y ↔ databasus vA.B)
 
 ## 4. Later ideas

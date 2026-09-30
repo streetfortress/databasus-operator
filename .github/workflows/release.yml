@@ -1,12 +1,15 @@
 # Release artifacts off vX.Y.Z tags: image + Helm chart → GHCR, install
 # manifest → GitHub release. Modeled on PrimeTime's release-server.yml.
 #
-# Runs on the GitHub mirror only: gitea.zen.lofi push-mirrors here, and a
-# mirrored tag push is a normal PAT-authenticated push, so it triggers this
+# Runs on GitHub only: the ref-pusher of sfi/deployments (#612) pushes main
+# and the v* tags of gitea's oss/databasus-operator to
+# github.com/streetfortress/databasus-operator. That push carries a GitHub
+# App installation token, not a workflow's GITHUB_TOKEN, so it triggers this
 # workflow. (Gitea Actions never sees this file — .gitea/workflows/ exists,
 # so gitea does not fall back to .github/workflows.)
-# NB the mirror's PAT needs the `workflow` scope once this file exists, or
-# gitea's syncs get refused by GitHub.
+# NB the ref-pusher's installation token needs `workflows: write` to push a
+# ref that touches this file, and its allowlist line must name refs/tags/v*
+# or no tag ever reaches GitHub.
 #
 # GHCR auth is the workflow's own GITHUB_TOKEN (packages: write below) — no
 # extra secrets. The image is a multi-arch manifest (amd64 + arm64; the arm
@@ -14,7 +17,10 @@
 #
 # First-push package visibility: GHCR creates packages private and has no
 # API to change that — flip databasus-operator and charts/databasus-operator
-# to public once in the web UI.
+# to public once in the web UI. The re-home to streetfortress (#14) makes
+# both packages new under that org, so this is due again on the first tag
+# after it. The old ghcr.io/sf1tzp packages stay as they are; v0.1.0 lives
+# there and the fleet still pulls it.
 name: release
 
 on:
@@ -43,8 +49,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/sf1tzp/databasus-operator:${{ github.ref_name }}
-            ghcr.io/sf1tzp/databasus-operator:latest
+            ghcr.io/streetfortress/databasus-operator:${{ github.ref_name }}
+            ghcr.io/streetfortress/databasus-operator:latest
 
   chart:
     runs-on: ubuntu-latest
@@ -58,7 +64,7 @@ jobs:
               <<< "${{ secrets.GITHUB_TOKEN }}"
           helm package charts/databasus-operator \
               --version "$VERSION" --app-version "$VERSION" -d dist
-          helm push "dist/databasus-operator-$VERSION.tgz" oci://ghcr.io/sf1tzp/charts
+          helm push "dist/databasus-operator-$VERSION.tgz" oci://ghcr.io/streetfortress/charts
 
   installer:
     runs-on: ubuntu-latest
@@ -68,11 +74,11 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Build install manifest pinned to this release's image
-        run: make build-installer IMG=ghcr.io/sf1tzp/databasus-operator:${{ github.ref_name }}
+        run: make build-installer IMG=ghcr.io/streetfortress/databasus-operator:${{ github.ref_name }}
       - name: Create GitHub release with the manifest attached
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "$GITHUB_REF_NAME" dist/install.yaml \
               --title "$GITHUB_REF_NAME" \
-              --notes "Install: \`kubectl apply -f install.yaml\`, or \`helm install databasus-operator oci://ghcr.io/sf1tzp/charts/databasus-operator --version ${GITHUB_REF_NAME#v}\`. Check the README compatibility matrix for supported databasus versions."
+              --notes "Install: \`kubectl apply -f install.yaml\`, or \`helm install databasus-operator oci://ghcr.io/streetfortress/charts/databasus-operator --version ${GITHUB_REF_NAME#v}\`. Check the README compatibility matrix for supported databasus versions."

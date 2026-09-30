@@ -8,11 +8,19 @@ the web UI uses.
 
 ## Repo model
 
-- **origin** (primary): `ssh://git@gitea.zen.lofi:30022/sf1tzp/databasus-operator.git`
-- `github.com/sf1tzp/databasus-operator` is a **push mirror** of origin — never push
-  to it directly, and never merge community PRs on GitHub. Fetch the PR branch,
-  merge on gitea (regular merge, not squash/rebase, so GitHub auto-marks the PR
-  merged when the commits mirror back).
+- **origin** (primary): `ssh://git@gitea.zen.lofi:30022/oss/databasus-operator.git`
+- `github.com/streetfortress/databasus-operator` is the **public face** of origin —
+  never push to it directly, and never merge community PRs on GitHub. Fetch the PR
+  branch, merge on gitea (regular merge, not squash/rebase, so GitHub auto-marks the
+  PR merged when the commits reach it).
+- The ref-pusher of sfi/deployments (#612) publishes the refs, not a gitea push
+  mirror: a CronJob pushes only what its allowlist names — `refs/heads/main` and
+  `refs/tags/v*`. A branch you push to gitea therefore stays private, and a tag
+  reaches GitHub within five minutes. A diverged GitHub ref fails the push instead
+  of being overwritten; the `RefPusherLineFailing` alert reports it.
+- The repo was `sf1tzp/databasus-operator` on GitHub and `ghcr.io/sf1tzp` on GHCR
+  until September 2026 (#14). `v0.1.0` and its two packages still live under the
+  old names; every release after it goes to `streetfortress`.
 - The Go module path is the GitHub path (public identity), even though development
   happens on gitea.
 - CI lives in `.github/workflows/` and runs on both Gitea Actions and GitHub Actions.
